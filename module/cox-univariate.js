@@ -1,7 +1,14 @@
 // Cox Proportional Hazards for a single binary covariate (Group2_T)
-// T: array of times, E: array of events (1=event, 0=censored), X: array of covariate (0/1)
+// T: array of times, 
+// E: array of events (1=event, 0=censored), 
+// X: array of covariate (0/1)
 
 export function coxphFit(T, E, X, maxIter = 50, tol = 1e-6) {
+  let check = sanityCheck(T, E, X);
+  if (check.status === false) {
+    throw new Error(check.message);
+  }
+
   // Sort by time ascending
   const n = T.length;
   let idx = Array.from({ length: n }, (_, i) => i);
@@ -56,21 +63,32 @@ export function coxphFit(T, E, X, maxIter = 50, tol = 1e-6) {
   const coef_lower = Math.exp(beta - z * se);
   const coef_upper = Math.exp(beta + z * se);
 
-  // const p = wald_stat(beta, se);
-
   return {
     coef: beta,
     se: se,
-    // p: p,
     hr: hr,
     coef_lower: coef_lower,
     coef_upper: coef_upper,
-    // For ph, median, etc., more code is needed
   };
 }
 
-function wald_stat(coef, se) {
-  if (se === 0) return Infinity; // Avoid division by zero
-  return coef / se;
+function sanityCheck(T, E, X) {
+  if (!Array.isArray(T) || !Array.isArray(E) || !Array.isArray(X)) {
+    return { status: false, message: "Input must be arrays." };
+  }
+  if (T.length !== E.length || T.length !== X.length) {
+    return { status: false, message: "Input arrays must have the same length." };
+  }
+  for (let i = 0; i < T.length; i++) {
+    if (typeof T[i] !== 'number' || typeof E[i] !== 'number' || typeof X[i] !== 'number') {
+      return { status: false, message: "All elements in T, E, and X must be numbers." };
+    }
+    if (E[i] !== 0 && E[i] !== 1) {
+      return { status: false, message: "E must be binary (0 or 1)." };
+    }
+    if (X[i] !== 0 && X[i] !== 1) {
+      return { status: false, message: "X must be binary (0 or 1)." };
+    }
+  }
+  return true;
 }
-
