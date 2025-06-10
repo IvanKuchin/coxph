@@ -1,4 +1,5 @@
 import * as cox from '../module/cox-univariate.js';
+import * as pValue from '../module/p-value.js';
 
 function initData() {
     const T = [];
@@ -32,4 +33,7 @@ function initData() {
 const { T, E, X } = initData();
 const result = cox.coxphFit(T, E, X);
 console.debug(result);
+
+const p = pValue.pValue(result.coef, result.se);
+console.debug(`p-value: ${p}`); // Output the p-value
 
