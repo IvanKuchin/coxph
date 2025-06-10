@@ -1,4 +1,4 @@
-import * as cox from '../module/cox_uni-variate.js';
+import * as cox from '../module/cox-univariate.js';
 
 function initData() {
     const T = [];
