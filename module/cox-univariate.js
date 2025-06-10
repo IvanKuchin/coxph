@@ -1,7 +1,10 @@
 // Cox Proportional Hazards for a single binary covariate (Group2_T)
-// T: array of times, E: array of events (1=event, 0=censored), X: array of covariate (0/1)
+// T: array of times, 
+// E: array of events (1=event, 0=censored), 
+// X: array of covariate (0/1)
 
 export function coxphFit(T, E, X, maxIter = 50, tol = 1e-6) {
+
   // Sort by time ascending
   const n = T.length;
   let idx = Array.from({ length: n }, (_, i) => i);
@@ -56,21 +59,11 @@ export function coxphFit(T, E, X, maxIter = 50, tol = 1e-6) {
   const coef_lower = Math.exp(beta - z * se);
   const coef_upper = Math.exp(beta + z * se);
 
-  // const p = wald_stat(beta, se);
-
   return {
     coef: beta,
     se: se,
-    // p: p,
     hr: hr,
     coef_lower: coef_lower,
     coef_upper: coef_upper,
-    // For ph, median, etc., more code is needed
   };
 }
-
-function wald_stat(coef, se) {
-  if (se === 0) return Infinity; // Avoid division by zero
-  return coef / se;
-}
-
