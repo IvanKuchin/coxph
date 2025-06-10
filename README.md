@@ -5,7 +5,7 @@ Cox proportional hazards model implementation in JavaScript (Node.js or browser)
 ## Features
 - Univariate Cox proportional hazards model for binary covariates
 - p-value calculation
-- No dependecies
+- No dependencies
 
 ## Installation
 
