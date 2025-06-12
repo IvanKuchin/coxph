@@ -1,5 +1,5 @@
-import * as cox from '../module/cox-univariate.js';
-import * as pValue from '../module/p-value.js';
+import * as cox from '../modules/cox-univariate.js';
+import * as pValue from '../modules/p-value.js';
 
 function initData() {
     const T1 = [6, 6, 6, 7, 10, 13, 16, 22, 23, 6, 9, 10, 11, 17, 19, 20, 25, 32, 32, 34, 35];
