@@ -34,6 +34,10 @@ export function coxphFit(T, E, X, maxIter = 50, tol = 1e-6) {
         info += (risksetXX / riskset) - Math.pow(risksetX / riskset, 2);
       }
     }
+    if (Math.abs(info) < 1e-12) {
+      console.warn("Information matrix is singular (info ≈ 0). Convergence may have failed.");
+      break; // Stop iteration if matrix is singular
+    }
     const delta = score / info;
     beta += delta;
     if (Math.abs(delta) < tol) break;
@@ -53,7 +57,13 @@ export function coxphFit(T, E, X, maxIter = 50, tol = 1e-6) {
       info += (risksetXX / riskset) - Math.pow(risksetX / riskset, 2);
     }
   }
-  const se = 1 / Math.sqrt(info);
+  let se = 0;
+  if (Math.abs(info) < 1e-12) {
+    console.warn("Cannot compute standard errors: information matrix is singular.");
+    se = NaN; // Set to NaN to indicate failure
+  } else {
+    se = 1 / Math.sqrt(info);
+  }
 
   // Hazard ratio
   const hr = Math.exp(beta);
